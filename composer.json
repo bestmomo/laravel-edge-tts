@@ -1,0 +1,47 @@
+{
+    "name": "bestmomo/laravel-edge-tts",
+    "description": "Edge-tts-php integration for Laravel",
+    "type": "laravel-package",
+    "license": "MIT",
+    "version": "0.1.0",
+    "authors": [
+        {
+            "name": "Bestmomo",
+            "email": "grandheretique@free.fr",
+            "homepage": "https://laravel.sillo.org"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "afaya/edge-tts": "^1.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bestmomo\\LaravelEdgeTts\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bestmomo\\LaravelEdgeTts\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bestmomo\\LaravelEdgeTts\\EdgeTtsLaravelServiceProvider"
+            ],
+            "aliases": {
+                "EdgeTts": "Bestmomo\\LaravelEdgeTts\\Facades\\EdgeTts"
+            }
+        }
+    },
+    "minimum-stability": "stable"
+}

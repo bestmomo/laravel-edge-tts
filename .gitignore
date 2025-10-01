@@ -1,0 +1,4 @@
+/.phpunit.cache
+/.vscode
+/public/hot
+/vendor
