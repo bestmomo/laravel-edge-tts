@@ -33,7 +33,7 @@ class EdgeTtsAdapter implements TtsSynthesizer
     public function synthesize(string $text, string $voice, array $options = []): string
     {
         $startTime = microtime(true);
-        
+
         if ($this->logCalls) {
             Log::info('Edge TTS Call Started', [
                 'method' => 'synthesize',
@@ -44,7 +44,7 @@ class EdgeTtsAdapter implements TtsSynthesizer
         }
 
         $cacheKey = md5(serialize([$text, $voice, $options]));
-        
+
         $result = Cache::remember($cacheKey, now()->addDay(), function() use ($text, $voice, $options) {
             $this->audioData = '';
             $this->edgeTts->synthesizeStream($text, $voice, $options, function($chunk) {
@@ -91,13 +91,12 @@ class EdgeTtsAdapter implements TtsSynthesizer
     public function toFile(string $text, string $voice, string $fileName, array $options = []): string
     {
         $audioData = $this->synthesize($text, $voice, $options);
-        
-        // S'assurer que le répertoire existe
+
         $dir = dirname($fileName);
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-        
+
         file_put_contents($fileName, $audioData);
         return $fileName;
     }

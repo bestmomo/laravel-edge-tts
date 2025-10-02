@@ -13,12 +13,12 @@
         .audio-player { margin-top: 20px; }
         .blue-gradient-bg {
             background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-            color: white; 
-            padding: 10px; 
-            border-radius: .5rem; 
+            color: white;
+            padding: 10px;
+            border-radius: .5rem;
             display: inline-block;
         }
-        .blue-shadow { 
+        .blue-shadow {
             text-shadow: none;
             box-shadow: 0 5px 15px rgba(13, 110, 253, 0.5);
         }
@@ -40,13 +40,13 @@
                         <i class="bi bi-code-slash me-1"></i> SSML
                     </button>
                 </div>
-                
+
                 <textarea class="form-control" id="textToSpeak" rows="6" placeholder="Enter text here..."></textarea>
                 <small id="ssmlHint" class="form-text text-muted" style="display: none;">
                     Content must start with &lt;speak&gt; and use SSML
                 </small>
             </div>
-    
+
             <div id="simpleControls" class="row mb-4">
                 <div class="col-md-6">
                     <label for="voiceSelect" class="form-label">Voice :</label>
@@ -58,7 +58,6 @@
                             @endphp
                             @if ($locale !== $currentLocale)
                                 @if ($currentLocale !== null)
-                                    </optgroup>
                                 @endif
                                 <optgroup label="{{ $voice['Locale'] }}">
                                 @php $currentLocale = $locale; @endphp
@@ -72,7 +71,7 @@
                         @endif
                     </select>
                 </div>
-                
+
                 <div class="col-md-2">
                     <label for="rateSelect" class="form-label">Rate:</label>
                     <select class="form-select" id="rateSelect">
@@ -83,7 +82,7 @@
                         <option value="50%">Very fast</option>
                     </select>
                 </div>
-                
+
                 <div class="col-md-2">
                     <label for="volumeSelect" class="form-label">Volume:</label>
                     <select class="form-select" id="volumeSelect">
@@ -94,7 +93,7 @@
                         <option value="50%">High</option>
                     </select>
                 </div>
-                
+
                 <div class="col-md-2">
                     <label for="pitchSelect" class="form-label">Pitch:</label>
                     <select class="form-select" id="pitchSelect">
@@ -106,25 +105,25 @@
                     </select>
                 </div>
             </div>
-    
+
             <div class="d-grid gap-2">
                 <button id="speakButton" class="btn btn-primary btn-lg">
                     <i class="bi bi-play-fill me-2"></i> Listen to the text
                 </button>
             </div>
-    
+
             <div class="audio-player text-center">
                 <audio id="audioPlayer" controls></audio>
             </div>
         </div>
-        
+
         @if (empty($voices))
             <div class="alert alert-warning mt-3">
                 ⚠️ **Warning :** Unable to retrieve the complete list of voices. Check the server connection to the Edge TTS service.
             </div>
         @endif
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const speakButton = document.getElementById('speakButton');
@@ -138,9 +137,10 @@
             const modeSsmlBtn = document.getElementById('modeSsmlBtn');
             const ssmlHint = document.getElementById('ssmlHint');
             const simpleControls = document.getElementById('simpleControls');
-    
+            simpleControls.style = undefined;
+
             let isSsmlMode = false;
-        
+
             const defaultText = "Born in the garret, in the kitchen bred,\n" +
                                 "Promoted thence to deck her mistress' head\n" +
                                 "Next for some gracious service unexpress'd";
@@ -160,10 +160,10 @@
     </mstts:express-as>
   </voice>
 </speak>`;
-    
+
             // Text init
             textToSpeak.value = defaultText;
-   
+
             function setMode(isSsml) {
                 isSsmlMode = isSsml;
                 if (isSsml) {
@@ -172,7 +172,7 @@
                     modeTextBtn.classList.add('btn-outline-primary');
                     modeSsmlBtn.classList.add('btn-primary');
                     modeSsmlBtn.classList.remove('btn-outline-primary');
-                    
+
                     simpleControls.style.display = 'none';
                     ssmlHint.style.display = 'block';
                     textToSpeak.value = defaultSsml;
@@ -182,55 +182,53 @@
                     modeSsmlBtn.classList.add('btn-outline-primary');
                     modeTextBtn.classList.add('btn-primary');
                     modeTextBtn.classList.remove('btn-outline-primary');
-                    
-                    simpleControls.style.display = 'flex'; 
+
+                    simpleControls.style.display = 'flex';
                     ssmlHint.style.display = 'none';
                     textToSpeak.value = defaultText;
                 }
             }
-            
+
             // Initialization of the correct display mode upon loading
-            setMode(false); 
-    
+            setMode(false);
+
             modeTextBtn.addEventListener('click', () => setMode(false));
             modeSsmlBtn.addEventListener('click', () => setMode(true));
-    
+
             speakButton.addEventListener('click', function () {
                 const text = textToSpeak.value.trim();
                 const voice = voiceSelect.value;
-                
+
                 if (text === '') {
                     alert('Please enter text to be read.');
                     return;
                 }
-    
+
                 // --- SSML Logic ---
                 let rate = '0%', volume = '0%', pitch = '0Hz';
-                
+
                 // If you are in PLAIN TEXT mode, use the values of the selectors.
                 if (!isSsmlMode) {
                     rate = rateSelect.value;
                     volume = volumeSelect.value;
                     pitch = pitchSelect.value;
-                } 
+                }
                 // If you are in SSML mode, the values remain at ‘0%’/'0Hz' (the TTS service will ignore these parameters because the text is in SSML)..
                 // ----------------------------------------
-                
+
                 speakButton.disabled = true;
                 speakButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Loading...';
-    
+
                 // Construction of the streaming URL with the variables ‘rate’, ‘volume’, ‘pitch’ ABOVE.
                 const params = new URLSearchParams({
                     text: text,
                     voice: voice,
                     rate: rate,
                     volume: volume,
-                    pitch: pitch 
+                    pitch: pitch
                 }).toString();
-                
-                const streamUrl = `{{ route('edge-tts.stream') }}?${params}`;
-                
-                audioPlayer.src = streamUrl;
+
+                audioPlayer.src = `{{ route('edge-tts.stream') }}?${params}`;
                 audioPlayer.load();
                 audioPlayer.play()
                     .catch(error => {
@@ -240,7 +238,7 @@
                         speakButton.disabled = false;
                     });
             });
-    
+
             // Reactivation of the button after playback
             audioPlayer.addEventListener('ended', function() {
                 speakButton.innerHTML = '<i class="bi bi-play-fill me-2"></i> Listen to the text';
