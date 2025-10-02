@@ -2,23 +2,25 @@
 
 namespace Bestmomo\LaravelEdgeTts\Http\Controllers;
 
+use Exception;
 use Illuminate\Routing\Controller;
 use Bestmomo\LaravelEdgeTts\Contracts\TtsSynthesizer;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\View\View;
 
 class DemoController extends Controller
 {
     /**
      * Loads and displays the demo page with the list of voices.
      */
-    public function __invoke(TtsSynthesizer $tts)
+    public function __invoke(TtsSynthesizer $tts): View
     {
         try {
             $voices = Cache::remember('edge_tts_available_voices', 3600, function () {
-                return app(TtsSynthesizer::class)->getVoices();     
+                return app(TtsSynthesizer::class)->getVoices();
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Error loading Edge TTS voices: ' . $e->getMessage());
             $voices = [];
         }
