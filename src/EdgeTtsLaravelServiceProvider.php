@@ -23,9 +23,9 @@ class EdgeTtsLaravelServiceProvider extends ServiceProvider
 
         // 2. Register the adapter: Bind the Contract to the Implementation
         $this->app->singleton(TtsSynthesizer::class, function ($app) {
-            $edgeTts = $app->make(\Afaya\EdgeTTS\Service\EdgeTTS::class);
+            $edgeTts = $app->make(EdgeTTS::class);
             $logCalls = config('edge-tts.enable_call_logging', false);
-            
+
             return new EdgeTtsAdapter($edgeTts, $logCalls);
         });
 
@@ -38,7 +38,7 @@ class EdgeTtsLaravelServiceProvider extends ServiceProvider
      * Start the services after all providers have been registered.
      */
     public function boot(): void
-    {        
+    {
         // Add view registration
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-edge-tts');
 
