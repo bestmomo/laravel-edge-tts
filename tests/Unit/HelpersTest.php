@@ -12,38 +12,38 @@ class HelpersTest extends TestCase
     {
         // Test for valid SSML
         $validCases = [
-            'basic' => '<speak>Bonjour</speak>',
-            'with_attributes' => '<speak version="1.0" xml:lang="fr-FR">Bonjour</speak>',
-            'with_self_closing_tag' => '<speak><break time="1s"/>Bonjour</speak>',
-            'with_multiple_elements' => '<speak><p>Paragraphe 1</p><p>Paragraphe 2</p></speak>',
-            'with_comments' => '<!-- Commentaire --><speak>Bonjour</speak>',
-            'uppercase_tags' => '<SPEAK>Bonjour</SPEAK>',
-            'mixed_case_tags' => '<Speak>Bonjour</sPeaK>',
+            'basic' => '<speak>Hello</speak>',
+            'with_attributes' => '<speak version="1.0" xml:lang="en-US">Hello</speak>',
+            'with_self_closing_tag' => '<speak><break time="1s"/>Hello</speak>',
+            'with_multiple_elements' => '<speak><p>Paragraph 1</p><p>Paragraph 2</p></speak>',
+            'with_comments' => '<!-- Comment --><speak>Hello</speak>',
+            'uppercase_tags' => '<SPEAK>Hello</SPEAK>',
+            'mixed_case_tags' => '<Speak>Hello</sPeaK>',
         ];
 
         foreach ($validCases as $case => $ssml) {
             $this->assertTrue(
                 is_valid_ssml($ssml),
-                "Le cas de test valide a échoué: {$case}"
+                "Valid test case failed: {$case}"
             );
         }
 
         // Test for invalid SSML
         $invalidCases = [
-            'missing_closing_tag' => '<speak>Bonjour',
-            'wrong_root' => '<p>Bonjour</p>',
+            'missing_closing_tag' => '<speak>Hello',
+            'wrong_root' => '<p>Hello</p>',
             'empty_string' => '',
             'whitespace' => '   ',
-            'invalid_xml' => '<speak>Bonjour<invalid>',
-            'nested_speak' => '<speak><speak>Bonjour</speak></speak>',
-            'invalid_self_closing' => '<speak><break>Bonjour</speak>',
-            'only_comment' => '<!-- Commentaire -->',
+            'invalid_xml' => '<speak>Hello<invalid>',
+            'nested_speak' => '<speak><speak>Hello</speak></speak>',
+            'invalid_self_closing' => '<speak><break>Hello</speak>',
+            'only_comment' => '<!-- Comment -->',
         ];
 
         foreach ($invalidCases as $case => $ssml) {
             $this->assertFalse(
                 is_valid_ssml($ssml),
-                "Le cas de test invalide a échoué: {$case}"
+                "Invalid test case failed: {$case}"
             );
         }
     }
@@ -62,9 +62,9 @@ class HelpersTest extends TestCase
         $this->assertTrue(is_valid_ssml('<speak>&lt; &gt; &amp; &apos; &quot;</speak>'));
         
         // Test with spaces in tags
-        $this->assertTrue(is_valid_ssml('<speak >Bonjour</speak>'));
+        $this->assertTrue(is_valid_ssml('<speak >Hello</speak>'));
         $this->assertTrue(is_valid_ssml('<speak 
-            >Bonjour</speak>'));
+            >Hello</speak>'));
     }
 
     #[Test]
@@ -73,8 +73,8 @@ class HelpersTest extends TestCase
         $ssml = '<?xml version="1.0"?>' . "\n" .
                 '<speak xmlns="http://www.w3.org/2001/10/synthesis" ' .
                 'xmlns:mstts="https://www.w3.org/2001/mstts" ' .
-                'version="1.0" xml:lang="fr-FR">' .
-                'Bonjour le monde' .
+                'version="1.0" xml:lang="en-US">' .
+                'Hello World' .
                 '</speak>';
 
         $this->assertTrue(is_valid_ssml($ssml));

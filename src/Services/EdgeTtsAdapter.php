@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Log;
 
 class EdgeTtsAdapter implements TtsSynthesizer
 {
-    protected $edgeTts;
-    protected $audioData = '';
-    protected $logCalls = false;
+    protected EdgeTTS $edgeTts;
+    protected string $audioData = '';
+    protected bool $logCalls = false;
 
     public function __construct(EdgeTTS $edgeTts, bool $logCalls = false)
     {
