@@ -39,6 +39,16 @@ class EdgeTtsLaravelServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Publish the configuration file
+        $this->publishes([
+            __DIR__.'/../config/edge-tts.php' => config_path('edge-tts.php'),
+        ], 'edge-tts-config');
+
+        // Load the configuration file (in case it is not published)
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/edge-tts.php', 'edge-tts'
+        );
+
         // Add view registration
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-edge-tts');
 
@@ -59,16 +69,6 @@ class EdgeTtsLaravelServiceProvider extends ServiceProvider
             // Ensure the expression is ready to be passed to route()
             return "<?php echo '<audio controls autoplay><source src=\"' . route('edge-tts.stream', {$expression}) . '\" type=\"audio/mpeg\"></audio>'; ?>";
         });
-
-        // Publish the configuration file
-        $this->publishes([
-            __DIR__.'/../config/edge-tts.php' => config_path('edge-tts.php'),
-        ], 'edge-tts-config');
-
-        // Load the configuration file (in case it is not published)
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/edge-tts.php', 'edge-tts'
-        );
 
         // Register the console command
         if ($this->app->runningInConsole()) {
