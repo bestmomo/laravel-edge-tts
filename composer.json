@@ -3,7 +3,7 @@
     "description": "Edge-tts-php integration for Laravel",
     "type": "laravel-package",
     "license": "MIT",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "authors": [
         {
             "name": "Bestmomo",
