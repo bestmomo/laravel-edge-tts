@@ -151,7 +151,7 @@ For even simpler integration into your Blade templates, the package provides an 
 
 ```blade
 {{-- Synthesize text with the default voice --}}
-@edge_tts('Hello world!')
+@edge_tts('text' => 'Hello world!')
 ```
 
 **Usage with Specific Voice and Parameters:**
@@ -160,11 +160,11 @@ The directive accepts the same parameters as the streaming route, passed as argu
 
 ```blade
 {{-- Synthesize in French with specific options --}}
-@edge_tts(
-    text: 'Bonjour le monde !', 
-    voice: 'fr-FR-DeniseNeural',
-    rate: '+10%'
-)
+@edge_tts([
+    'text' => 'Bonjour le monde !', 
+    'voice' => 'fr-FR-DeniseNeural',
+    'rate' => '+10%'
+])
 ```
 
 This makes it incredibly easy to embed synthesized audio directly into your views.

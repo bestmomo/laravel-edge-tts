@@ -65,8 +65,7 @@ class EdgeTtsLaravelServiceProvider extends ServiceProvider
 
         // Register the @edge_tts directive
         Blade::directive('edge_tts', function ($expression) {
-            // Clean the parentheses of the Blade expression (e.g., @edge_tts('text', 'voice'))
-            // Ensure the expression is ready to be passed to route()
+            // Expression must be an array (ex: ['text' => 'Hello'])
             return "<?php echo '<audio controls autoplay><source src=\"' . route('edge-tts.stream', {$expression}) . '\" type=\"audio/mpeg\"></audio>'; ?>";
         });
 
